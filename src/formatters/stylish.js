@@ -58,4 +58,4 @@ const formatStylish = (diff, depth = 0) => {
   return lines.join('\n')
 }
 
-export default (diff) => `{\n${formatStylish(diff, 0)}\n}`
+export default diff => `{\n${formatStylish(diff, 0)}\n}`
