@@ -2,8 +2,9 @@ import _ from 'lodash'
 
 const formatValue = (value, depth) => {
   if (_.isPlainObject(value)) {
-    const indent = ' '.repeat(4 * (depth + 1))
-    const bracketIndent = ' '.repeat(4 * (depth - 1))
+    const indent = ' '.repeat(4 * (depth + 2))
+    const bracketIndent = ' '.repeat(4 * (depth + 1))
+    
     const entries = Object.entries(value)
     
     if (entries.length === 0) {
@@ -17,26 +18,11 @@ const formatValue = (value, depth) => {
     return `{\n${lines.join('\n')}\n${bracketIndent}  }`
   }
   
-  if (typeof value === 'string') {
-    return value
-  }
-  
-  if (value === null) {
-    return 'null'
-  }
-  
-  if (typeof value === 'boolean') {
-    return value.toString()
-  }
-  
-  if (typeof value === 'number') {
-    return value.toString()
-  }
-  
-  if (value === undefined) {
-    return ''
-  }
-  
+  if (typeof value === 'string') return value
+  if (value === null) return 'null'
+  if (typeof value === 'boolean') return value.toString()
+  if (typeof value === 'number') return value.toString()
+  if (value === undefined) return ''
   return value
 }
 
@@ -52,22 +38,19 @@ const formatStylish = (diff, depth = 1) => {
         return `${indent}  ${key}: {\n${formatStylish(node.children, depth + 1)}\n${bracketIndent}  }`
       
       case 'added':
-        return `${indent}+ ${key}: ${formatValue(node.value, depth + 1)}`
+        return `${indent}+ ${key}: ${formatValue(node.value, depth)}`
       
       case 'removed':
-        return `${indent}- ${key}: ${formatValue(node.value, depth + 1)}`
+        return `${indent}- ${key}: ${formatValue(node.value, depth)}`
       
-      case 'changed': {
-        const oldValueFormatted = formatValue(node.oldValue, depth + 1)
-        const newValueFormatted = formatValue(node.newValue, depth + 1)
+      case 'changed':
         return [
-          `${indent}- ${key}: ${oldValueFormatted}`,
-          `${indent}+ ${key}: ${newValueFormatted}`
+          `${indent}- ${key}: ${formatValue(node.oldValue, depth)}`,
+          `${indent}+ ${key}: ${formatValue(node.newValue, depth)}`
         ].join('\n')
-      }
       
       case 'unchanged':
-        return `${indent}  ${key}: ${formatValue(node.value, depth + 1)}`
+        return `${indent}  ${key}: ${formatValue(node.value, depth)}`
       
       default:
         return ''
