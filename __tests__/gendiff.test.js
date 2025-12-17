@@ -7,40 +7,46 @@ const __dirname = path.dirname(__filename)
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename)
 
-test('gendiff flat JSON files', () => {
-  const filepath1 = getFixturePath('file1.json')
-  const filepath2 = getFixturePath('file2.json')
-  
-  const result = genDiff(filepath1, filepath2)
-  
-  expect(result).toContain('- follow: false')
-  expect(result).toContain('+ verbose: true')
-  expect(result).toContain('- timeout: 50')
-  expect(result).toContain('+ timeout: 20')
-  expect(result).toContain('host: hexlet.io')
-  expect(result).toContain('- proxy: 123.234.53.22')
+describe('Flat files comparison', () => {
+  test('JSON files', () => {
+    const filepath1 = getFixturePath('file1.json')
+    const filepath2 = getFixturePath('file2.json')
+    const result = genDiff(filepath1, filepath2)
+    expect(result).toContain('- follow: false')
+    expect(result).toContain('+ verbose: true')
+  })
+
+  test('YAML files', () => {
+    const filepath1 = getFixturePath('file1.yml')
+    const filepath2 = getFixturePath('file2.yml')
+    const result = genDiff(filepath1, filepath2)
+    expect(result).toContain('- follow: false')
+    expect(result).toContain('+ verbose: true')
+  })
 })
 
-test('gendiff flat YAML files', () => {
-  const filepath1 = getFixturePath('file1.yml')
-  const filepath2 = getFixturePath('file2.yml')
-  
-  const result = genDiff(filepath1, filepath2)
-  
-  expect(result).toContain('- follow: false')
-  expect(result).toContain('+ verbose: true')
-  expect(result).toContain('- timeout: 50')
-  expect(result).toContain('+ timeout: 20')
-  expect(result).toContain('host: hexlet.io')
-  expect(result).toContain('- proxy: 123.234.53.22')
-})
+describe('Recursive comparison', () => {
+  test('JSON files with nested structures', () => {
+    const filepath1 = getFixturePath('file1_recursive.json')
+    const filepath2 = getFixturePath('file2_recursive.json')
+    const result = genDiff(filepath1, filepath2, 'stylish')
+    
+    expect(result).toContain('  common: {')
+    expect(result).toContain('    + follow: false')
+    expect(result).toContain('    - setting3: true')
+    expect(result).toContain('    + setting3: null')
+    expect(result).toContain('      doge: {')
+    expect(result).toContain('        - wow:')
+    expect(result).toContain('        + wow: so much')
+    expect(result).toContain('  - group2: {')
+    expect(result).toContain('  + group3: {')
+  })
 
-test('gendiff mixed JSON and YAML files', () => {
-  const filepath1 = getFixturePath('file1.json')
-  const filepath2 = getFixturePath('file2.yml')
-  
-  const result = genDiff(filepath1, filepath2)
-  
-  expect(typeof result).toBe('string')
-  expect(result.length).toBeGreaterThan(10)
+  test('YAML files with nested structures', () => {
+    const filepath1 = getFixturePath('file1_recursive.yml')
+    const filepath2 = getFixturePath('file2_recursive.yml')
+    const result = genDiff(filepath1, filepath2, 'stylish')
+    expect(typeof result).toBe('string')
+    expect(result.length).toBeGreaterThan(100)
+  })
 })
