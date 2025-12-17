@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 const formatValue = (value, depth) => {
   if (_.isPlainObject(value)) {
-    const indent = ' '.repeat(4 * depth)
+    const indent = ' '.repeat(4 * (depth + 1))
     const bracketIndent = ' '.repeat(4 * (depth - 1))
     const entries = Object.entries(value)
     
@@ -41,7 +41,7 @@ const formatValue = (value, depth) => {
 }
 
 const formatStylish = (diff, depth = 1) => {
-  const indent = ' '.repeat(4 * depth - 2)
+  const indent = ' '.repeat(4 * depth)
   const bracketIndent = ' '.repeat(4 * (depth - 1))
   
   const lines = diff.map((node) => {
