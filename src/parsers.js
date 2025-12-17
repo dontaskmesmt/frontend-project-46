@@ -10,15 +10,15 @@ const getFileContent = (filepath) => {
 const parseFile = (filepath) => {
   const content = getFileContent(filepath)
   const extension = path.extname(filepath).toLowerCase()
-  
+
   if (extension === '.json') {
     return JSON.parse(content)
   }
-  
+
   if (extension === '.yml' || extension === '.yaml') {
     return yaml.load(content)
   }
-  
+
   throw new Error(`Unsupported file format: ${extension}`)
 }
 
