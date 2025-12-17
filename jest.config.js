@@ -1,8 +1,9 @@
 export default {
   transform: {},
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
   testEnvironment: 'node',
-  moduleDirectories: ['node_modules', 'src'],
+  testMatch: ['**/__tests__/**/*.js', '**/?(*.)+(spec|test).js'],
+  roots: ['<rootDir>/../'],  // искать тесты на уровень выше
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  }
 }
