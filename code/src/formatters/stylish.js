@@ -1,21 +1,19 @@
 import _ from 'lodash'
 
-const formatValue = (value, depth) => {
+const formatValue = (value, depth = 0) => {
   if (_.isPlainObject(value)) {
-    const indent = ' '.repeat(4 * (depth + 2))
-    const bracketIndent = ' '.repeat(4 * (depth + 1))
+    // ИСПРАВЛЕНО: увеличиваем отступы
+    const indent = ' '.repeat(4 * (depth + 2))  // было (depth + 1)
+    const bracketIndent = ' '.repeat(4 * (depth + 1))  // было depth
     
     const entries = Object.entries(value)
-    
-    if (entries.length === 0) {
-      return '{}'
-    }
+    if (entries.length === 0) return '{}'
     
     const lines = entries.map(([key, val]) => {
       return `${indent}  ${key}: ${formatValue(val, depth + 1)}`
     })
     
-    return `{\n${lines.join('\n')}\n${bracketIndent}  }`
+    return `{\n${lines.join('\n')}\n${bracketIndent}}`
   }
   
   if (typeof value === 'string') return value
@@ -26,9 +24,10 @@ const formatValue = (value, depth) => {
   return value
 }
 
-const formatStylish = (diff, depth = 1) => {
-  const indent = ' '.repeat(4 * depth)
-  const bracketIndent = ' '.repeat(4 * (depth - 1))
+const formatStylish = (diff, depth = 0) => {
+  // ИСПРАВЛЕНО: добавляем больше отступов
+  const indent = ' '.repeat(4 * (depth + 1))  // было 4 * depth
+  const bracketIndent = ' '.repeat(4 * depth)
   
   const lines = diff.map((node) => {
     const { key, type } = node
