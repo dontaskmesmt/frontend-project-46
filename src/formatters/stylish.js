@@ -27,7 +27,6 @@ const formatStylish = (diff, depth = 0) => {
   const indentSize = 4
   const baseIndent = ' '.repeat(indentSize * depth)
   const elementIndent = `${baseIndent}  `
-  const nestedIndent = baseIndent
 
   const lines = diff.map((node) => {
     const { key, type } = node
